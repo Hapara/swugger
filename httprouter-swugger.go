@@ -8,10 +8,13 @@ import (
 	"strings"
 )
 
+type Router interface {
+	Handle(method, path string, handle httprouter.Handle)
+}
+
 type HttpRouterSwagger struct {
-	HttpRouter *httprouter.Router
+	HttpRouter Router
 	GoRestfulContainer *restful.Container
-	//GoRestfulWebServices []*restful.WebService
 	SwaggerConfig *swagger.Config
 	isSwaggerServiceRegistered bool
 }
@@ -27,7 +30,7 @@ func (hrs *HttpRouterSwagger) Init(webServiceAddr string) {
 		SwaggerFilePath: "../swagger-ui/dist"}
 
 }
-func NewHRS(webServiceAddr string, httpRouter *httprouter.Router) *HttpRouterSwagger {
+func NewHRS(webServiceAddr string, httpRouter Router) *HttpRouterSwagger {
 	hrs := &HttpRouterSwagger{}
 	hrs.Init(webServiceAddr)
 	hrs.HttpRouter = httpRouter
